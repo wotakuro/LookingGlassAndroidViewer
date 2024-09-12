@@ -17,7 +17,6 @@ namespace Wotakuro
             var gmo = new GameObject("AndroidMediaSelector");
             GameObject.DontDestroyOnLoad(gmo);
             var proxy = gmo.AddComponent<MediaSelectorProxy>();
-            proxy.onUpdate = OnUpdate;
             //RequestAllFileAccess();
         }
 
@@ -26,6 +25,12 @@ namespace Wotakuro
             using var staticCls = new AndroidJavaClass("com.wotakuro.lkgview.LookingGlassViewerActivity");
             staticCls.CallStatic("selectImage");
         }
+        public static void SelectVideo()
+        {
+            using var staticCls = new AndroidJavaClass("com.wotakuro.lkgview.LookingGlassViewerActivity");
+            staticCls.CallStatic("selectVideo");
+        }
+
 
         public static void RequestAllFileAccess()
         {

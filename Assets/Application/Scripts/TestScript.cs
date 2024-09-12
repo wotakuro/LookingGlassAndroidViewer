@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Android;
+using UnityEngine.Video;
 
 public class TestScript : MonoBehaviour
 {
@@ -13,6 +14,7 @@ public class TestScript : MonoBehaviour
     void Start()
     {
         Wotakuro.MediaSelector.onSelectImage = OnSelectImg;
+        Wotakuro.MediaSelector.onSelectVideo = OnSelectVideo;
     }
     private void OnSelectImg(string path)
     {
@@ -23,14 +25,25 @@ public class TestScript : MonoBehaviour
         img.texture = texture;
         resolutionText.text = texture.width + "x" + texture.height;
     }
+    private void OnSelectVideo(string path)
+    {
+        Debug.Log(path);
+        txt.text = path;
+    }
+
 
 
     public void OnPressRequestFileAccess()
     {
         Wotakuro.MediaSelector.RequestAllFileAccess();
     }
+
     public void OnPressSelectImage()
     {
         Wotakuro.MediaSelector.SelectImage();
+    }
+    public void OnPressSelectVideo()
+    {
+        Wotakuro.MediaSelector.SelectVideo();
     }
 }

@@ -34,12 +34,17 @@ public class LookingGlassViewerActivity extends UnityPlayerActivity {
     if(resultData == null){
       return;
     }
+    if(resultData.getData() == null ){
+      return;
+    }
     if (requestCode == IMAGE_REQUEST_CODE ) {
-      if (null != resultData.getData()) {
-        Uri uri = resultData.getData();
-        String path = GetMediaPath(uri , MediaStore.Images.Media.EXTERNAL_CONTENT_URI );
-        UnitySendMessage("AndroidMediaSelector","OnSelectImage", path);
-      }
+      Uri uri = resultData.getData();
+      String path = GetMediaPath(uri , MediaStore.Images.Media.EXTERNAL_CONTENT_URI );
+      UnitySendMessage("AndroidMediaSelector","OnSelectImage", path);
+    }else if (requestCode == VIDEO_REQUEST_CODE ) {
+      Uri uri = resultData.getData();
+      String path = GetMediaPath(uri , MediaStore.Video.Media.EXTERNAL_CONTENT_URI );
+      UnitySendMessage("AndroidMediaSelector","OnSelectVideo", path);
     }
   }
 
@@ -53,7 +58,7 @@ public class LookingGlassViewerActivity extends UnityPlayerActivity {
   }
 
   /**
-   * メディア選択を開く
+   * 画像選択を開く
    */
   public static void selectImage() {
     Uri collection;
@@ -69,6 +74,25 @@ public class LookingGlassViewerActivity extends UnityPlayerActivity {
     intent.setType("image/*");
     UnityPlayer.currentActivity.startActivityForResult(intent,IMAGE_REQUEST_CODE);
   }
+
+  /**
+   * ビデオ選択を開く
+   */
+  public static void selectVideo() {
+    Uri collection;
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+      collection = MediaStore.Video.Media.getContentUri(MediaStore.VOLUME_EXTERNAL);
+    } else {
+      collection = MediaStore.Video.Media.EXTERNAL_CONTENT_URI;
+    }
+    Intent intent = new Intent(
+      Intent.ACTION_OPEN_DOCUMENT,
+      collection);
+    
+    intent.setType("video/*");
+    UnityPlayer.currentActivity.startActivityForResult(intent,VIDEO_REQUEST_CODE);
+  }
+
 
   /** メディアのURIからPathを取得します
     */

@@ -7,21 +7,61 @@ namespace Wotakuro
 {
     internal class MediaSelectorProxy : MonoBehaviour
     {
-        public System.Action onUpdate;
+        private List<string> imagesPath = new List<string>();
+        private List<string> videosPath = new List<string>();
+        private List<string> tmpList = new List<string>();
+
         public void OnSelectImage(string url)
         {
-            if(MediaSelector.onSelectImage != null)
+            lock (imagesPath)
             {
-                MediaSelector.onSelectImage(url);
+                imagesPath.Add(url);
             }
         }
-        private void Start()
+        public void OnSelectVideo(string url)
         {
-
+            lock(videosPath)
+            {
+                videosPath.Add(url);
+            }
         }
+
         private void Update()
         {
-            if (onUpdate != null) { onUpdate(); }
+            lock (imagesPath)
+            {
+                tmpList.Clear();
+                foreach(var path in imagesPath)
+                {
+                    tmpList.Add(path);
+                }
+                imagesPath.Clear();
+            }
+            foreach( var path in tmpList)
+            {
+                if (MediaSelector.onSelectImage != null)
+                {
+                    MediaSelector.onSelectImage(path);
+                }
+            }
+
+            lock (videosPath)
+            {
+                tmpList.Clear();
+                foreach (var path in videosPath)
+                {
+                    tmpList.Add(path);
+                }
+                videosPath.Clear();
+            }
+            foreach (var path in tmpList)
+            {
+                if (MediaSelector.onSelectVideo != null)
+                {
+                    MediaSelector.onSelectVideo(path);
+                }
+            }
+
         }
 
     }
