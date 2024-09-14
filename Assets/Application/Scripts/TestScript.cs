@@ -10,9 +10,14 @@ public class TestScript : MonoBehaviour
     public UnityEngine.UI.Text txt;
     public UnityEngine.UI.Text resolutionText;
     public UnityEngine.UI.RawImage img;
+
+    private VideoPlayer videoPlayer;
+    private RenderTexture videoRt;
+
     // Start is called before the first frame update
     void Start()
     {
+        videoPlayer = GetComponent<VideoPlayer>();
         Wotakuro.MediaSelector.onSelectImage = OnSelectImg;
         Wotakuro.MediaSelector.onSelectVideo = OnSelectVideo;
     }
@@ -29,6 +34,24 @@ public class TestScript : MonoBehaviour
     {
         Debug.Log(path);
         txt.text = path;
+        videoPlayer.source = VideoSource.Url;
+        videoPlayer.url = path;
+        videoPlayer.Prepare();
+        videoPlayer.prepareCompleted += (player) =>
+        {
+            if (videoRt)
+            {
+                videoRt.Release();
+            }
+            videoRt = new RenderTexture((int)videoPlayer.width, (int)videoPlayer.height, 0);
+            resolutionText.text = videoPlayer.width + "x" + videoPlayer.height;
+            videoPlayer.renderMode = VideoRenderMode.RenderTexture;
+            videoPlayer.targetTexture = videoRt;
+
+            img.texture = videoRt;
+            videoPlayer.Play();
+        };
+
     }
 
 
