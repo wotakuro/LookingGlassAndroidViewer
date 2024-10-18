@@ -25,7 +25,7 @@ Shader "LookingGlass/Lenticular" {
             HLSLPROGRAM
             #pragma vertex vert
             #pragma fragment frag
-            #pragma target 4.6
+            #pragma target 4.5
             
             #include "UnityCG.cginc"
             //WARNING: I'm writing all the shader source code here,
